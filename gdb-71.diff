@@ -1,6 +1,6 @@
 diff -uprN gdb-7.1.org/bfd/archive64.c gdb-7.1/bfd/archive64.c
---- gdb-7.1.org/bfd/archive64.c	2009-09-10 06:38:57.000000000 +0900
-+++ gdb-7.1/bfd/archive64.c	2016-06-06 14:15:44.000000000 +0900
+--- gdb-7.1.org/bfd/archive64.c	2009-09-09 21:38:57.000000000 +0000
++++ gdb-7.1/bfd/archive64.c	2017-02-18 14:39:45.880824524 +0000
 @@ -43,7 +43,7 @@ bfd_elf64_archive_slurp_armap (bfd *abfd
  {
    struct artdata *ardata = bfd_ardata (abfd);
@@ -10,9 +10,21 @@ diff -uprN gdb-7.1.org/bfd/archive64.c gdb-7.1/bfd/archive64.c
    bfd_size_type i, parsed_size, nsymz, stringsize, carsym_size, ptrsize;
    struct areltdata *mapdata;
    bfd_byte int_buf[8];
+diff -uprN gdb-7.1.org/bfd/bfd-in2.h gdb-7.1/bfd/bfd-in2.h
+--- gdb-7.1.org/bfd/bfd-in2.h	2010-02-08 20:28:43.000000000 +0000
++++ gdb-7.1/bfd/bfd-in2.h	2017-02-18 14:41:55.518539607 +0000
+@@ -517,7 +517,7 @@ extern void warn_deprecated (const char
+ 
+ #define bfd_get_symbol_leading_char(abfd) ((abfd)->xvec->symbol_leading_char)
+ 
+-#define bfd_set_cacheable(abfd,bool) (((abfd)->cacheable = bool), TRUE)
++#define bfd_set_cacheable(abfd,bool) ((abfd)->cacheable = bool)
+ 
+ extern bfd_boolean bfd_cache_close
+   (bfd *abfd);
 diff -uprN gdb-7.1.org/bfd/compress.c gdb-7.1/bfd/compress.c
---- gdb-7.1.org/bfd/compress.c	2009-09-10 06:38:57.000000000 +0900
-+++ gdb-7.1/bfd/compress.c	2016-06-06 13:45:17.000000000 +0900
+--- gdb-7.1.org/bfd/compress.c	2009-09-09 21:38:57.000000000 +0000
++++ gdb-7.1/bfd/compress.c	2017-02-18 14:39:45.880824524 +0000
 @@ -51,7 +51,7 @@ DESCRIPTION
  */
  
@@ -23,8 +35,8 @@ diff -uprN gdb-7.1.org/bfd/compress.c gdb-7.1/bfd/compress.c
  #ifndef HAVE_ZLIB_H
    /* These are just to quiet gcc.  */
 diff -uprN gdb-7.1.org/bfd/cpu-arm.c gdb-7.1/bfd/cpu-arm.c
---- gdb-7.1.org/bfd/cpu-arm.c	2009-09-02 16:18:36.000000000 +0900
-+++ gdb-7.1/bfd/cpu-arm.c	2016-06-06 14:15:08.000000000 +0900
+--- gdb-7.1.org/bfd/cpu-arm.c	2009-09-02 07:18:36.000000000 +0000
++++ gdb-7.1/bfd/cpu-arm.c	2017-02-18 14:39:45.880824524 +0000
 @@ -228,7 +228,7 @@ arm_check_note (bfd *abfd,
  {
    unsigned long namesz;
@@ -35,8 +47,8 @@ diff -uprN gdb-7.1.org/bfd/cpu-arm.c gdb-7.1/bfd/cpu-arm.c
  
    if (buffer_size < offsetof (arm_Note, name))
 diff -uprN gdb-7.1.org/bfd/doc/bfd.texinfo gdb-7.1/bfd/doc/bfd.texinfo
---- gdb-7.1.org/bfd/doc/bfd.texinfo	2009-09-02 16:18:38.000000000 +0900
-+++ gdb-7.1/bfd/doc/bfd.texinfo	2016-06-06 14:12:08.000000000 +0900
+--- gdb-7.1.org/bfd/doc/bfd.texinfo	2009-09-02 07:18:38.000000000 +0000
++++ gdb-7.1/bfd/doc/bfd.texinfo	2017-02-18 14:39:45.880824524 +0000
 @@ -323,7 +323,7 @@ All of BFD lives in one directory.
  @printindex cp
  
@@ -56,8 +68,8 @@ diff -uprN gdb-7.1.org/bfd/doc/bfd.texinfo gdb-7.1/bfd/doc/bfd.texinfo
  
  @bye
 diff -uprN gdb-7.1.org/bfd/doc/chew.c gdb-7.1/bfd/doc/chew.c
---- gdb-7.1.org/bfd/doc/chew.c	2009-09-28 21:15:51.000000000 +0900
-+++ gdb-7.1/bfd/doc/chew.c	2016-06-06 14:07:35.000000000 +0900
+--- gdb-7.1.org/bfd/doc/chew.c	2009-09-28 12:15:51.000000000 +0000
++++ gdb-7.1/bfd/doc/chew.c	2017-02-18 14:39:45.880824524 +0000
 @@ -476,8 +476,8 @@ remove_noncomments (src, dst)
  static void
  print_stack_level ()
@@ -78,9 +90,42 @@ diff -uprN gdb-7.1.org/bfd/doc/chew.c gdb-7.1/bfd/doc/chew.c
  	       tos - stack);
        return 1;
      }
+diff -uprN gdb-7.1.org/bfd/elf-eh-frame.c gdb-7.1/bfd/elf-eh-frame.c
+--- gdb-7.1.org/bfd/elf-eh-frame.c	2009-12-11 13:42:02.000000000 +0000
++++ gdb-7.1/bfd/elf-eh-frame.c	2017-02-18 14:39:45.880824524 +0000
+@@ -1275,7 +1275,7 @@ _bfd_elf_eh_frame_section_offset (bfd *o
+ {
+   struct eh_frame_sec_info *sec_info;
+   struct elf_link_hash_table *htab;
+-  struct eh_frame_hdr_info *hdr_info;
++  struct eh_frame_hdr_info __attribute__((__unused__)) *hdr_info;
+   unsigned int lo, hi, mid;
+ 
+   if (sec->sec_info_type != ELF_INFO_TYPE_EH_FRAME)
+diff -uprN gdb-7.1.org/bfd/elf.c gdb-7.1/bfd/elf.c
+--- gdb-7.1.org/bfd/elf.c	2010-02-18 00:09:06.000000000 +0000
++++ gdb-7.1/bfd/elf.c	2017-02-18 14:39:45.880824524 +0000
+@@ -4873,7 +4873,7 @@ static bfd_boolean
+ prep_headers (bfd *abfd)
+ {
+   Elf_Internal_Ehdr *i_ehdrp;	/* Elf file header, internal form */
+-  Elf_Internal_Phdr *i_phdrp = 0; /* Program header table, internal form */
++  Elf_Internal_Phdr __attribute__((__unused__)) *i_phdrp = 0; /* Program header table, internal form */
+   struct elf_strtab_hash *shstrtab;
+   const struct elf_backend_data *bed = get_elf_backend_data (abfd);
+ 
+@@ -4989,7 +4989,7 @@ bfd_boolean
+ _bfd_elf_write_object_contents (bfd *abfd)
+ {
+   const struct elf_backend_data *bed = get_elf_backend_data (abfd);
+-  Elf_Internal_Ehdr *i_ehdrp;
++  Elf_Internal_Ehdr __attribute__((__unused__)) *i_ehdrp;
+   Elf_Internal_Shdr **i_shdrp;
+   bfd_boolean failed;
+   unsigned int count, num_sec;
 diff -uprN gdb-7.1.org/bfd/elf32-arm.c gdb-7.1/bfd/elf32-arm.c
---- gdb-7.1.org/bfd/elf32-arm.c	2010-02-18 19:56:26.000000000 +0900
-+++ gdb-7.1/bfd/elf32-arm.c	2016-06-06 14:04:23.000000000 +0900
+--- gdb-7.1.org/bfd/elf32-arm.c	2010-02-18 10:56:26.000000000 +0000
++++ gdb-7.1/bfd/elf32-arm.c	2017-02-18 14:39:45.880824524 +0000
 @@ -3453,7 +3453,7 @@ arm_build_one_stub (struct bfd_hash_entr
    struct bfd_link_info *info;
    asection *stub_sec;
@@ -155,42 +200,21 @@ diff -uprN gdb-7.1.org/bfd/elf32-arm.c gdb-7.1/bfd/elf32-arm.c
    asection *stub_sec;
    bfd_vma addr;
    char *stub_name;
-diff -uprN gdb-7.1.org/bfd/elf.c gdb-7.1/bfd/elf.c
---- gdb-7.1.org/bfd/elf.c	2010-02-18 09:09:06.000000000 +0900
-+++ gdb-7.1/bfd/elf.c	2016-06-06 14:06:13.000000000 +0900
-@@ -4873,7 +4873,7 @@ static bfd_boolean
- prep_headers (bfd *abfd)
- {
-   Elf_Internal_Ehdr *i_ehdrp;	/* Elf file header, internal form */
--  Elf_Internal_Phdr *i_phdrp = 0; /* Program header table, internal form */
-+  Elf_Internal_Phdr __attribute__((__unused__)) *i_phdrp = 0; /* Program header table, internal form */
-   struct elf_strtab_hash *shstrtab;
-   const struct elf_backend_data *bed = get_elf_backend_data (abfd);
+diff -uprN gdb-7.1.org/bfd/elflink.c gdb-7.1/bfd/elflink.c
+--- gdb-7.1.org/bfd/elflink.c	2010-02-04 09:16:41.000000000 +0000
++++ gdb-7.1/bfd/elflink.c	2017-02-18 14:46:49.443267011 +0000
+@@ -10345,7 +10345,7 @@ bfd_elf_final_link (bfd *abfd, struct bf
+ 	      else
+ 		BFD_ASSERT (entsize1 == bed->s->sizeof_rel
+ 			    || entsize1 == bed->s->sizeof_rela);
+-	      same_size = !o->use_rela_p == (entsize1 == bed->s->sizeof_rel);
++	      same_size = (!(o->use_rela_p)) == (entsize1 == bed->s->sizeof_rel);
  
-@@ -4989,7 +4989,7 @@ bfd_boolean
- _bfd_elf_write_object_contents (bfd *abfd)
- {
-   const struct elf_backend_data *bed = get_elf_backend_data (abfd);
--  Elf_Internal_Ehdr *i_ehdrp;
-+  Elf_Internal_Ehdr __attribute__((__unused__)) *i_ehdrp;
-   Elf_Internal_Shdr **i_shdrp;
-   bfd_boolean failed;
-   unsigned int count, num_sec;
-diff -uprN gdb-7.1.org/bfd/elf-eh-frame.c gdb-7.1/bfd/elf-eh-frame.c
---- gdb-7.1.org/bfd/elf-eh-frame.c	2009-12-11 22:42:02.000000000 +0900
-+++ gdb-7.1/bfd/elf-eh-frame.c	2016-06-06 14:14:27.000000000 +0900
-@@ -1275,7 +1275,7 @@ _bfd_elf_eh_frame_section_offset (bfd *o
- {
-   struct eh_frame_sec_info *sec_info;
-   struct elf_link_hash_table *htab;
--  struct eh_frame_hdr_info *hdr_info;
-+  struct eh_frame_hdr_info __attribute__((__unused__)) *hdr_info;
-   unsigned int lo, hi, mid;
- 
-   if (sec->sec_info_type != ELF_INFO_TYPE_EH_FRAME)
+ 	      if (!same_size)
+ 		rel_count1 = &esdo->rel_count2;
 diff -uprN gdb-7.1.org/bfd/verilog.c gdb-7.1/bfd/verilog.c
---- gdb-7.1.org/bfd/verilog.c	2009-09-10 06:38:58.000000000 +0900
-+++ gdb-7.1/bfd/verilog.c	2016-06-06 13:46:27.000000000 +0900
+--- gdb-7.1.org/bfd/verilog.c	2009-09-09 21:38:58.000000000 +0000
++++ gdb-7.1/bfd/verilog.c	2017-02-18 14:39:45.890812791 +0000
 @@ -222,7 +222,7 @@ verilog_write_section (bfd *abfd,
    verilog_write_address (abfd, list->where);
    while (octets_written < list->size)
@@ -201,8 +225,8 @@ diff -uprN gdb-7.1.org/bfd/verilog.c gdb-7.1/bfd/verilog.c
  
        if (octets_this_chunk > 16)
 diff -uprN gdb-7.1.org/libiberty/regex.c gdb-7.1/libiberty/regex.c
---- gdb-7.1.org/libiberty/regex.c	2009-10-03 03:22:57.000000000 +0900
-+++ gdb-7.1/libiberty/regex.c	2016-06-06 13:43:34.000000000 +0900
+--- gdb-7.1.org/libiberty/regex.c	2009-10-02 18:22:57.000000000 +0000
++++ gdb-7.1/libiberty/regex.c	2017-02-18 14:39:45.890812791 +0000
 @@ -7140,8 +7140,8 @@ byte_re_match_2_internal (struct re_patt
                 register from the stack, since lowest will == highest in
                 `pop_failure_point'.  */
